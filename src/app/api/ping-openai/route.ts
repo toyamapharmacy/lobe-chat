@@ -5,7 +5,6 @@ export async function GET() {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) return Response.json({ ok: false, error: 'NO_API_KEY' }, { status: 500 });
 
-    // 最小の Responses API 呼び出し（1トークンだけ）
     const r = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
@@ -15,7 +14,8 @@ export async function GET() {
       body: JSON.stringify({
         model: process.env.MODEL_DEFAULT || 'gpt-4o-mini',
         input: 'ping',
-        max_output_tokens: 1,
+        // ✅ どちらか一方
+        // max_output_tokens: 16,
       }),
     });
 
