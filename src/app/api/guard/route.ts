@@ -1,30 +1,12 @@
-// src/app/api/guard/route.ts
 export const runtime = 'edge';
 
-function getCodes() {
-  const raw = process.env.ACCESS_CODES ?? '';
-  return raw.split(',').map(s => s.trim()).filter(Boolean);
-}
+export async function GET() {
+  const accessCodeOn =
+    process.env.ENABLE_ACCESS_CODE === 'true' ||
+    process.env.NEXT_PUBLIC_USE_ACCESS_CODE === 'true';
 
-function extractCode(req: Request) {
-  const url = new URL(req.url);
-  return (
-    url.searchParams.get('code') ||                     // ?code=XXXX
-    req.headers.get('x-access-code') ||                 // ヘッダ
-    ''                                                  // （必要ならCookie実装も可）
-  );
-}
-
-export async function GET(req: Request) {
-  const codes = getCodes();
-  if (codes.length === 0) return Response.json({ ok: true, mode: 'open' });
-
-  const code = extractCode(req);
-  const ok = codes.includes(code);
-  return new Response(JSON.stringify({ ok, mode: 'code' }), {
-    status: ok ? 200 : 401,
-    headers: { 'content-type': 'application/json' },
+  return Response.json({
+    ok: true,
+    mode: accessCodeOn ? 'access_code' : 'open',
   });
 }
-
-export const POST = GET;
