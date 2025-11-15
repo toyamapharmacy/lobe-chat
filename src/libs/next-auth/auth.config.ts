@@ -23,7 +23,8 @@ export const initSSOProviders = () => {
 
         if (validProvider) return validProvider.provider;
 
-        throw new Error([NextAuth] provider ${provider} is not supported);
+        // ★ここだけ修正：文字列はバッククォートで囲む
+        throw new Error(`[NextAuth] provider ${provider} is not supported`);
       })
     : [];
 };
@@ -65,4 +66,3 @@ export default {
   },
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;
-
