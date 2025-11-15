@@ -65,3 +65,4 @@ export default {
   },
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;
+
