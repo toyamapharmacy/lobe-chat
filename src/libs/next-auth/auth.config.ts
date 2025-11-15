@@ -17,15 +17,14 @@ const {
 const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
 export const initSSOProviders = () => {
-  return NEXT_PUBLIC_ENABLE_NEXT_AUTH
-    ? NEXT_AUTH_SSO_PROVIDERS.split(/[,，]/).map((provider) => {
-        const validProvider = ssoProviders.find((item) => item.id === provider.trim());
+  // ★ フラグを無視して、auth0 だけを強制的に有効にする
+  const auth0Provider = ssoProviders.find((item) => item.id === 'auth0');
 
-        if (validProvider) return validProvider.provider;
+  if (!auth0Provider) {
+    throw new Error('[NextAuth] auth0 provider not found in ssoProviders');
+  }
 
-        throw new Error(`[NextAuth] provider ${provider} is not supported`);
-      })
-    : [];
+  return [auth0Provider.provider];
 };
 
 // Notice this is only an object, not a full Auth.js instance
